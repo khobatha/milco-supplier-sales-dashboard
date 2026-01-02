@@ -110,7 +110,7 @@ h2{
   color: var(--text);
 }
 
-input, button{
+input, select, button{
   width:100%;
   padding:10px 12px;
   border-radius:12px;

@@ -5,43 +5,90 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MiLCo Supplier Sales Dashboard</title>
   <link rel="stylesheet" href="assets/styles.css">
+
+  <!-- CSV + charts -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-<header class="brandbar">
-  <div class="container brand">
-    <img src="assets/img/milco-logo.png" alt="MiLCo logo">
-    <div>
-      <h1>MiLCo Supplier Sales Dashboard</h1>
-      <div class="tagline">Made-In-Lesotho Retail Cooperative Society Ltd</div>
-      <p class="muted small" style="margin:6px 0 0;">
-        Read-only view. Admin uploads monthly reports on <a href="admin.html">admin page</a>.
-      </p>
-    </div>
-  </div>
-</header>
 
+  <header class="brandbar">
+    <div class="container brand">
+      <img src="assets/img/milco-logo.png" alt="MiLCo logo">
+      <div>
+        <h1>MiLCo Supplier Sales Dashboard</h1>
+        <div class="tagline">Made-In-Lesotho Retail Cooperative Society Ltd</div>
+        <p class="muted small" style="margin:6px 0 0;">
+          Read-only view. Admin uploads monthly reports on <a href="admin.html">admin page</a>.
+        </p>
+      </div>
+    </div>
+  </header>
 
   <main class="container grid">
-    <section class="card">
-      <h2>Overview</h2>
-      <div class="kpis">
-        <div class="kpi"><div class="kpiLabel">Months</div><div id="kpiMonths" class="kpiValue">—</div></div>
-        <div class="kpi"><div class="kpiLabel">Total Sales</div><div id="kpiSales" class="kpiValue">—</div></div>
-        <div class="kpi"><div class="kpiLabel">Total Payouts</div><div id="kpiPayouts" class="kpiValue">—</div></div>
-        <div class="kpi"><div class="kpiLabel">Bank vs MoMo</div><div id="kpiModes" class="kpiValue">—</div></div>
+
+    <section class="card full">
+      <h2>Filters</h2>
+      <div class="row" style="margin:0;">
+        <label>Year</label>
+        <select id="filterYear"></select>
       </div>
+      <div class="row">
+        <label>Month</label>
+        <select id="filterMonth"></select>
+      </div>
+      <div class="row">
+        <label>Mode</label>
+        <select id="filterMode">
+          <option value="ALL">All</option>
+          <option value="BANK">Bank</option>
+          <option value="MOMO">MoMo</option>
+        </select>
+      </div>
+      <p id="filterSummary" class="muted small" style="margin:8px 0 0;"></p>
     </section>
 
     <section class="card">
-      <h2>Sales by Month</h2>
+      <h2>Overview</h2>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpiLabel">Months (filtered)</div>
+          <div id="kpiMonths" class="kpiValue">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiLabel">Total sales/payouts</div>
+          <div id="kpiSales" class="kpiValue">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiLabel">Total payouts</div>
+          <div id="kpiPayouts" class="kpiValue">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiLabel">Bank vs MoMo</div>
+          <div id="kpiModes" class="kpiValue">—</div>
+        </div>
+      </div>
+      <p class="muted small" style="margin:10px 0 0;">
+        Data source: <code>data/transactions.csv</code> (MONTH &amp; YEAR included).
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Sales by Month (filtered)</h2>
       <canvas id="salesChart" height="120"></canvas>
     </section>
 
     <section class="card">
-      <h2>Payouts by Mode</h2>
+      <h2>Payouts by Mode (filtered)</h2>
       <canvas id="modeChart" height="120"></canvas>
+    </section>
+
+    <section class="card full">
+      <h2>Bank vs MoMo Over Time</h2>
+      <canvas id="modeOverTimeChart" height="90"></canvas>
+      <p class="muted small" style="margin:8px 0 0;">
+        Shows how payouts split between Bank and MoMo across month-year periods (respects Year/Month filters; Mode filter is ignored here so both lines are visible).
+      </p>
     </section>
 
     <section class="card full">
@@ -51,12 +98,12 @@
     </section>
 
     <section class="card full">
-      <h2>Latest Transactions</h2>
+      <h2>Latest Transactions (filtered)</h2>
       <div class="tableWrap">
         <table id="txTable">
           <thead>
             <tr>
-              <th>Month</th>
+              <th>Period</th>
               <th>Supplier</th>
               <th>Amount</th>
               <th>Mode</th>
@@ -67,10 +114,11 @@
         </table>
       </div>
     </section>
+
   </main>
 
   <footer class="container muted small">
-    © MiLCo — dashboard is static; history updates when admin commits the updated ledger.
+    © MiLCo — dashboard is static. History updates when admin commits the updated ledger.
   </footer>
 
   <script src="assets/app.js"></script>
