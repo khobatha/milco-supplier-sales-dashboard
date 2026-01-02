@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MiLCo Admin — Batch Generator</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+<header class="brandbar">
+  <div class="container brand">
+    <img src="assets/img/milco-logo.png" alt="MiLCo logo">
+    <div>
+      <h1>MiLCo Supplier Sales Dashboard</h1>
+      <div class="tagline">Made-In-Lesotho Retail Cooperative Society Ltd</div>
+      <p class="muted small" style="margin:6px 0 0;">
+        Read-only view. Admin uploads monthly reports on <a href="admin.html">admin page</a>.
+      </p>
+    </div>
+  </div>
+</header>
+
+
+  <main class="container">
+    <section class="card">
+      <h2>1) Upload Monthly Sales Report</h2>
+      <input type="file" id="salesFile" accept=".csv" />
+      <div class="row">
+        <label>Bank threshold (≥)</label>
+        <input type="number" id="threshold" value="400" min="0" step="1" />
+      </div>
+      <button id="processBtn">Process & Generate Files</button>
+      <p id="status" class="muted"></p>
+    </section>
+
+    <section class="card">
+      <h2>2) Downloads</h2>
+      <ul id="downloads"></ul>
+    </section>
+
+    <section class="card">
+      <h2>3) Exceptions / Missing Details</h2>
+      <div id="exceptions" class="result muted">No run yet.</div>
+    </section>
+
+    <section class="card">
+      <h2>4) Next step (important)</h2>
+      <ol>
+        <li>Download <b>transactions.csv</b> (updated ledger).</li>
+        <li>Replace <code>data/transactions.csv</code> in the repo with the downloaded file.</li>
+        <li>Commit + push. The dashboard updates automatically.</li>
+      </ol>
+    </section>
+
+    <p class="muted small"><a href="index.html">← Back to dashboard</a></p>
+  </main>
+
+  <script src="assets/admin.js"></script>
+</body>
+</html>
