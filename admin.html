@@ -8,54 +8,100 @@
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
+
 <header class="brandbar">
   <div class="container brand">
     <img src="assets/img/milco-logo.png" alt="MiLCo logo">
     <div>
-      <h1>MiLCo Supplier Sales Dashboard</h1>
+      <h1>MiLCo Admin — Monthly Batch Generator</h1>
       <div class="tagline">Made-In-Lesotho Retail Cooperative Society Ltd</div>
       <p class="muted small" style="margin:6px 0 0;">
-        Read-only view. Admin uploads monthly reports on <a href="admin.html">admin page</a>.
+        Upload monthly sales report (Template v2 with MONTH &amp; YEAR). The tool generates bank/momo batches and an updated ledger.
       </p>
     </div>
   </div>
 </header>
 
+<main class="container">
+  <section class="card">
+    <h2>1) Upload Monthly Sales Report (Template v2)</h2>
 
-  <main class="container">
-    <section class="card">
-      <h2>1) Upload Monthly Sales Report</h2>
-      <input type="file" id="salesFile" accept=".csv" />
-      <div class="row">
-        <label>Bank threshold (≥)</label>
-        <input type="number" id="threshold" value="400" min="0" step="1" />
+    <p class="muted small" style="margin-top:-6px;">
+      Required columns:
+      <b>COMPANY NAME</b>, <b>SUM of COST</b>, <b>COMMENT</b>, <b>MONTH</b>, <b>YEAR</b>.
+    </p>
+
+    <input type="file" id="salesFile" accept=".csv" />
+
+    <div class="row">
+      <label>Bank threshold (≥)</label>
+      <input type="number" id="threshold" value="400" min="0" step="1" />
+    </div>
+
+    <button id="processBtn">Process & Generate Files</button>
+    <p id="status" class="muted"></p>
+
+    <!-- NEW: Verification summary -->
+    <div id="verifyBox" class="result" style="margin-top:12px; display:none;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="badge" id="vParsed">Parsed: —</span>
+        <span class="badge" id="vNonEmpty">Non-empty: —</span>
+        <span class="badge" id="vInvalid">Invalid: —</span>
+        <span class="badge red" id="vBank">BANK: —</span>
+        <span class="badge green" id="vMomo">MOMO: —</span>
+        <span class="badge" id="vExceptions">Exceptions: —</span>
+        <span class="badge" id="vLedger">Ledger add: —</span>
       </div>
-      <button id="processBtn">Process & Generate Files</button>
-      <p id="status" class="muted"></p>
-    </section>
 
-    <section class="card">
-      <h2>2) Downloads</h2>
-      <ul id="downloads"></ul>
-    </section>
+      <div class="muted small" style="margin-top:10px;">
+        <b>Verification check:</b>
+        Non-empty rows = Invalid + BANK + MOMO + Exceptions
+      </div>
 
-    <section class="card">
-      <h2>3) Exceptions / Missing Details</h2>
-      <div id="exceptions" class="result muted">No run yet.</div>
-    </section>
+      <div class="tableWrap" style="margin-top:10px;">
+        <table id="verifyTable">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-    <section class="card">
-      <h2>4) Next step (important)</h2>
-      <ol>
-        <li>Download <b>transactions.csv</b> (updated ledger).</li>
-        <li>Replace <code>data/transactions.csv</code> in the repo with the downloaded file.</li>
-        <li>Commit + push. The dashboard updates automatically.</li>
-      </ol>
-    </section>
+      <p id="verifyNote" class="muted small" style="margin-top:10px;"></p>
+    </div>
+  </section>
 
-    <p class="muted small"><a href="index.html">← Back to dashboard</a></p>
-  </main>
+  <section class="card">
+    <h2>2) Downloads</h2>
+    <ul id="downloads"></ul>
+    <p class="muted small" style="margin-top:10px;">
+      Outputs: <b>bank-payment-batch.csv</b>, <b>momo-payment-batch.csv</b>, <b>transactions.csv</b> (updated ledger), plus verification files if needed.
+    </p>
+  </section>
 
-  <script src="assets/admin.js"></script>
+  <section class="card">
+    <h2>3) Exceptions / Missing Details</h2>
+    <div id="exceptions" class="result muted">No run yet.</div>
+    <p class="muted small" style="margin-top:10px;">
+      If exceptions appear, fix <code>data/banking-details.csv</code> (names, account/branch, MoMo details), then re-run.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>4) Next step (important)</h2>
+    <ol class="muted small">
+      <li>Download <b>transactions.csv</b> (updated ledger).</li>
+      <li>Replace <code>data/transactions.csv</code> in the repo with the downloaded file.</li>
+      <li>Commit + push. The dashboard updates automatically.</li>
+    </ol>
+  </section>
+
+  <p class="muted small"><a href="index.html">← Back to dashboard</a></p>
+</main>
+
+<script src="assets/admin.js"></script>
 </body>
 </html>
