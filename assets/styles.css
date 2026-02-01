@@ -137,6 +137,16 @@ button:hover{
   filter: brightness(1.03);
 }
 
+.btn-success{
+  border-color: rgba(31, 157, 58, .4);
+  background: linear-gradient(180deg, #29b651, var(--accent));
+}
+
+.btn-danger{
+  border-color: rgba(227, 6, 19, .45);
+  background: linear-gradient(180deg, var(--primary), var(--primary-2));
+}
+
 .row{
   display:flex;
   gap:10px;
@@ -158,10 +168,23 @@ button:hover{
   min-height:40px;
 }
 
+.result-danger{
+  border:1px dashed rgba(227, 6, 19, .5);
+  background: rgba(227, 6, 19, .06);
+}
+
 .tableWrap{
   overflow:auto;
   border:1px solid var(--line);
   border-radius: 12px;
+}
+
+tr.row-missing td{
+  background: rgba(227, 6, 19, .05);
+}
+
+tr.row-complete td{
+  background: rgba(31, 157, 58, .04);
 }
 
 table{

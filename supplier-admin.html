@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MiLCo Admin — Supplier Payment Details</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="assets/vendor/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<header class="brandbar">
+  <div class="container brand">
+    <img src="assets/img/milco-logo.png" alt="MiLCo logo">
+    <div>
+      <h1>MiLCo Admin — Supplier Payment Details</h1>
+      <div class="tagline">Made-In-Lesotho Retail Cooperative Society Ltd</div>
+      <p class="muted small" style="margin:6px 0 0;">
+        View payment details, highlight missing data, and generate an updated banking-details.csv.
+      </p>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <h2>1) Current Payment Details</h2>
+    <p class="muted small" style="margin-top:-6px;">
+      Rows in red have missing payment details.
+    </p>
+
+    <div class="tableWrap" style="margin-top:10px;">
+      <table id="bankingTable">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Payment Mode</th>
+            <th>Bank</th>
+            <th>Account</th>
+            <th>Branch</th>
+            <th>MoMo</th>
+            <th>MoMo Number</th>
+            <th>MoMo Names</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <button id="exportBankingCsv" class="btn-success">Download Table (CSV)</button>
+      <button id="exportBankingXlsx" class="btn-success">Download Table (XLSX)</button>
+      <button id="refreshBanking" class="btn-success">Refresh Table</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2) Update Missing Payment Details</h2>
+
+    <p class="muted small" style="margin-top:-6px;">
+      Upload either or both Excel sheets. Existing details are never overwritten.
+      Only missing fields are filled, and new suppliers are appended.
+    </p>
+
+    <div class="row" style="margin-top:14px;">
+      <label>Raw Sales Report (XLSX)</label>
+      <input type="file" id="bankUpdateSalesFile" accept=".xlsx" />
+    </div>
+
+    <div class="row">
+      <label>MoMo Update Sheet (XLSX)</label>
+      <input type="file" id="bankUpdateMomoFile" accept=".xlsx" />
+    </div>
+
+    <button id="updateBankingBtn" class="btn-success">Generate Updated banking-details.csv</button>
+    <p id="bankingStatus" class="muted"></p>
+    <div id="bankingDownloads"></div>
+  </section>
+
+  <p class="muted small"><a href="admin.html">← Back to admin</a></p>
+</main>
+
+<script src="assets/suppliers.js"></script>
+</body>
+</html>

@@ -6,6 +6,7 @@
   <title>MiLCo Admin — Batch Generator</title>
   <link rel="stylesheet" href="assets/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="assets/vendor/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -16,7 +17,7 @@
       <h1>MiLCo Admin — Monthly Batch Generator</h1>
       <div class="tagline">Made-In-Lesotho Retail Cooperative Society Ltd</div>
       <p class="muted small" style="margin:6px 0 0;">
-        Upload monthly sales report (Template v2 with MONTH &amp; YEAR). The tool generates bank/momo batches and an updated ledger.
+        Upload raw POS sales report (XLSX), generate the monthly sales summary (XLSX), then generate bank/momo batches and an updated ledger.
       </p>
     </div>
   </div>
@@ -24,24 +25,52 @@
 
 <main class="container">
   <section class="card">
-    <h2>1) Upload Monthly Sales Report (Template v2)</h2>
+    <h2>1) Upload Raw Sales Report (XLSX)</h2>
 
     <p class="muted small" style="margin-top:-6px;">
-      Required columns:
-      <b>COMPANY NAME</b>, <b>SUM of COST</b>, <b>COMMENT</b>, <b>MONTH</b>, <b>YEAR</b>.
+      First sheet only. Cell A1 must contain a title like <b>MILCO JANUARY SALES 2026</b>.
+      Columns must include: <b>PRODUCTS</b>, <b>QUANTITY</b>, <b>SELLING</b>, <b>COST</b>, <b>PROFIT</b>,
+      <b>COMPANY NAME</b>, <b>BANK ACCOUNT/MOBILE</b>, <b>BANK NAME</b>, <b>CONTACTS</b>.
     </p>
 
-    <input type="file" id="salesFile" accept=".csv" />
+    <input type="file" id="rawFile" accept=".xlsx" />
+
+    <button id="generateSummaryBtn" class="btn-success">Generate Monthly Sales Summary (XLSX)</button>
+    <p id="summaryStatus" class="muted"></p>
+
+    <div id="summaryDownloads"></div>
+
+    <div id="rawVerifyBox" class="result" style="margin-top:12px; display:none;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="badge" id="rParsed">Parsed: —</span>
+        <span class="badge" id="rNonEmpty">Non-empty: —</span>
+        <span class="badge" id="rInvalid">Invalid: —</span>
+        <span class="badge" id="rSuppliers">Suppliers: —</span>
+        <span class="badge" id="rRawTotal">Raw total: —</span>
+        <span class="badge" id="rSumTotal">Summary total: —</span>
+      </div>
+
+      <div class="muted small" style="margin-top:10px;">
+        <b>Verification check:</b>
+        Raw total COST must equal Summary total COST
+      </div>
+
+      <p id="rawVerifyNote" class="muted small" style="margin-top:10px;"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2) Generate Batch Files</h2>
 
     <div class="row">
       <label>Bank threshold (≥)</label>
       <input type="number" id="threshold" value="400" min="0" step="1" />
     </div>
 
-    <button id="processBtn">Process & Generate Files</button>
+    <button id="processBtn" class="btn-success">Process & Generate Files</button>
     <p id="status" class="muted"></p>
 
-    <!-- NEW: Verification summary -->
+    <!-- Verification summary -->
     <div id="verifyBox" class="result" style="margin-top:12px; display:none;">
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <span class="badge" id="vParsed">Parsed: —</span>
@@ -72,10 +101,7 @@
 
       <p id="verifyNote" class="muted small" style="margin-top:10px;"></p>
     </div>
-  </section>
 
-  <section class="card">
-    <h2>2) Downloads</h2>
     <ul id="downloads"></ul>
     <p class="muted small" style="margin-top:10px;">
       Outputs: <b>bank-payment-batch.csv</b>, <b>momo-payment-batch.csv</b>, <b>transactions.csv</b> (updated ledger), plus verification files if needed.
@@ -98,6 +124,10 @@
       <li>Commit + push. The dashboard updates automatically.</li>
     </ol>
   </section>
+
+  <p class="muted small">
+    <a href="supplier-admin.html">→ Manage Supplier Payment Details</a>
+  </p>
 
   <p class="muted small"><a href="index.html">← Back to dashboard</a></p>
 </main>
